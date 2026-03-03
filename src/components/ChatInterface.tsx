@@ -88,28 +88,34 @@ export default function ChatInterface() {
 
   if (!hasAcknowledged) {
     return (
-      <div className="flex flex-col h-screen bg-stone-950 text-stone-200 font-sans items-center justify-center p-6">
-        <div className="max-w-md w-full bg-stone-900/50 border border-stone-800 rounded-2xl p-8 shadow-2xl backdrop-blur-sm">
+      <div className="flex flex-col h-screen bg-bg-dark text-text-primary font-sans items-center justify-center p-6 relative overflow-hidden">
+        {/* Background Atmosphere */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-accent/5 blur-[120px] opacity-20 mix-blend-screen animate-pulse" />
+            <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-accent/5 blur-[120px] opacity-10 mix-blend-screen" />
+        </div>
+
+        <div className="max-w-2xl w-full bg-surface border border-white/5 rounded-2xl p-12 shadow-2xl backdrop-blur-sm relative z-10">
           <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 rounded-full bg-red-900/20 flex items-center justify-center border border-red-900/30">
-              <Sparkles className="w-8 h-8 text-red-500" />
+            <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center border border-accent/20 shadow-[0_0_15px_rgba(255,78,0,0.15)]">
+              <Sparkles className="w-8 h-8 text-accent" />
             </div>
           </div>
-          <h1 className="text-2xl font-display font-semibold text-center text-stone-100 mb-2">HECATE</h1>
-          <p className="text-xs text-stone-500 font-mono uppercase tracking-wider text-center mb-8">Left Hand Path Guide</p>
+          <h1 className="text-3xl font-serif font-medium text-center text-text-primary mb-2 tracking-wide">HECATE</h1>
+          <p className="text-[10px] text-text-secondary font-mono uppercase tracking-[0.2em] text-center mb-8 opacity-60">Left Hand Path Guide</p>
           
-          <div className="bg-stone-950/50 rounded-xl p-6 border border-stone-800/50 mb-8">
-            <p className="text-stone-300 text-sm leading-relaxed text-center">
+          <div className="bg-black/40 rounded-xl p-6 border border-white/5 mb-8">
+            <p className="text-text-secondary text-sm leading-relaxed text-center font-light">
               "Hecate is a representative of AskSatan.Help , and is an LLM Model to provide assistance, but does not have memory between sessions, and is not a companion. Only continue if you are comfortable acknowledging this."
             </p>
           </div>
 
           <button
             onClick={() => setHasAcknowledged(true)}
-            className="w-full bg-red-900/20 hover:bg-red-900/30 text-red-400 hover:text-red-300 border border-red-900/30 rounded-xl py-3 font-medium transition-all duration-200 flex items-center justify-center gap-2 group"
+            className="w-full bg-accent/10 hover:bg-accent/20 text-accent border border-accent/20 rounded-xl py-3.5 font-medium transition-all duration-300 flex items-center justify-center gap-2 group shadow-[0_0_10px_rgba(255,78,0,0.1)] hover:shadow-[0_0_20px_rgba(255,78,0,0.2)]"
           >
-            <span>I Acknowledge</span>
-            <Send className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+            <span className="tracking-wide text-sm uppercase">I Acknowledge</span>
+            <Send className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
           </button>
         </div>
       </div>
