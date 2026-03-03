@@ -184,7 +184,7 @@ app.post("/api/chat", async (req, res) => {
     let classification = {};
     try {
       const classifierChat = ai.chats.create({
-        model: "gemini-3-flash-preview",
+        model: "gemini-2.5-flash",
         config: { systemInstruction: CLASSIFIER_INSTRUCTION }
       });
       const classResult = await classifierChat.sendMessage({ message });
@@ -202,7 +202,7 @@ app.post("/api/chat", async (req, res) => {
       `\n\n[KNOWLEDGE BASE]\n${KNOWLEDGE_BASE}`;
 
     const chat = ai.chats.create({
-      model: "gemini-3-flash-preview",
+      model: "gemini-2.5-flash",
       config: {
         systemInstruction: dynamicSystemInstruction,
       },
