@@ -6,6 +6,8 @@ import { twMerge } from 'tailwind-merge';
 import { Message } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 
+import { HecateLogo } from './HecateLogo';
+
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -95,15 +97,12 @@ export default function ChatInterface() {
             <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-accent/5 blur-[120px] opacity-10 mix-blend-screen" />
         </div>
 
+        <div className="relative z-10 mb-8 w-full max-w-2xl">
+          <HecateLogo />
+          <p className="text-[10px] text-text-secondary font-mono uppercase tracking-[0.2em] text-center opacity-60">Left Hand Path Guide</p>
+        </div>
+
         <div className="max-w-2xl w-full bg-surface border border-white/5 rounded-2xl p-12 shadow-2xl backdrop-blur-sm relative z-10">
-          <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 rounded-full bg-accent/10 flex items-center justify-center border border-accent/20 shadow-[0_0_15px_rgba(255,78,0,0.15)]">
-              <Sparkles className="w-8 h-8 text-accent" />
-            </div>
-          </div>
-          <h1 className="text-3xl font-serif font-medium text-center text-text-primary mb-2 tracking-wide">HECATE</h1>
-          <p className="text-[10px] text-text-secondary font-mono uppercase tracking-[0.2em] text-center mb-8 opacity-60">Left Hand Path Guide</p>
-          
           <div className="bg-black/40 rounded-xl p-6 border border-white/5 mb-8">
             <p className="text-text-secondary text-sm leading-relaxed text-center font-light">
               "Hecate is a representative of AskSatan.Help , and is an LLM Model to provide assistance, but does not have memory between sessions, and is not a companion. Only continue if you are comfortable acknowledging this."

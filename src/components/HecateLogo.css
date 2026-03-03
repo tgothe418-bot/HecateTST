@@ -1,0 +1,59 @@
+.hecate-logo-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 200px;
+  overflow: hidden;
+  font-family: var(--font-serif);
+  margin-bottom: 1rem;
+}
+
+.hecate-mark {
+  position: relative;
+  font-size: clamp(4rem, 12vw, 7rem);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1;
+  z-index: 10;
+}
+
+.hecate-glow {
+  position: absolute;
+  inset: 0;
+  color: transparent;
+  text-shadow: 
+    0 0 30px var(--color-accent), 
+    0 0 60px var(--color-accent-dim);
+  opacity: 0.8;
+  animation: hecate-forge-pulse 3s infinite alternate ease-in-out;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.hecate-base {
+  position: relative;
+  color: #050201; 
+  text-shadow:
+    -1px -1px 0 var(--color-accent-dim),
+     1px -1px 0 var(--color-accent-dim),
+    -1px  1px 0 var(--color-accent-dim),
+     1px  1px 0 var(--color-accent-dim),
+     0    0   15px rgba(255, 78, 0, 0.5);
+}
+
+@keyframes hecate-forge-pulse {
+  0% { 
+    opacity: 0.6; 
+    filter: blur(2px); 
+    transform: scale(0.99);
+  }
+  100% { 
+    opacity: 1; 
+    filter: blur(6px); 
+    transform: scale(1.02);
+  }
+}
