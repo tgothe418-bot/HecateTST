@@ -1,9 +1,9 @@
 import express from "express";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
-import dotenv from "dotenv";
+// import dotenv from "dotenv"; // Removed to avoid interference with system env vars
 
-dotenv.config();
+// dotenv.config(); // Removed
 
 const app = express();
 const PORT = 3000;
@@ -13,11 +13,63 @@ app.use(express.json());
 // Initialize Gemini API
 // We use lazy initialization in the route to prevent crash if key is missing at startup
 const getAI = () => {
-  const key = process.env.GEMINI_API_KEY;
-  if (!key) {
-    throw new Error("GEMINI_API_KEY is not set");
+  // Prioritize API_KEY as per system environment, then fallbacks
+  const candidates = [
+    { name: "API_KEY", value: process.env.API_KEY },
+    { name: "GEMINI_API_KEY", value: process.env.GEMINI_API_KEY },
+    { name: "GOOGLE_API_KEY", value: process.env.GOOGLE_API_KEY },
+  ];
+
+  let validKey = "";
+
+  console.log("[DEBUG] Attempting to resolve API Key...");
+
+  for (const { name, value } of candidates) {
+    if (!value) continue;
+    
+    let clean = value.trim();
+    // Remove wrapping quotes
+    if ((clean.startsWith('"') && clean.endsWith('"')) || (clean.startsWith("'") && clean.endsWith("'"))) {
+      clean = clean.slice(1, -1);
+    }
+
+    // Validation: Google API keys typically start with "AIza"
+    if (clean.startsWith("AIza")) {
+      console.log(`[DEBUG] Found valid-looking key in ${name}`);
+      validKey = clean;
+      break;
+    } else {
+      console.warn(`[DEBUG] Ignoring ${name}: Value does not start with 'AIza' (Length: ${clean.length})`);
+    }
   }
-  return new GoogleGenAI({ apiKey: key });
+
+  // Fallback: If no "AIza" key found, take the first non-empty one (risky but necessary fallback)
+  if (!validKey) {
+    console.warn("[DEBUG] No key starting with 'AIza' found. Falling back to first available non-empty key.");
+    for (const { name, value } of candidates) {
+      if (value && value.trim().length > 0) {
+        let clean = value.trim();
+        if ((clean.startsWith('"') && clean.endsWith('"')) || (clean.startsWith("'") && clean.endsWith("'"))) {
+          clean = clean.slice(1, -1);
+        }
+        validKey = clean;
+        console.log(`[DEBUG] Using fallback key from ${name}`);
+        break;
+      }
+    }
+  }
+
+  if (!validKey) {
+    console.error("CRITICAL: No API key found in API_KEY, GEMINI_API_KEY, or GOOGLE_API_KEY");
+    throw new Error("API key is missing");
+  }
+
+  // Strict validation
+  if (!validKey.startsWith("AIza")) {
+     throw new Error(`Invalid API Key format: Key does not start with 'AIza'. (Masked: ${validKey.substring(0, 3)}..., Length: ${validKey.length})`);
+  }
+
+  return new GoogleGenAI({ apiKey: validKey });
 };
 
 // System Instruction / Persona
@@ -135,7 +187,7 @@ app.post("/api/chat", async (req, res) => {
         model: "gemini-3-flash-preview",
         config: { systemInstruction: CLASSIFIER_INSTRUCTION }
       });
-      const classResult = await classifierChat.sendMessage(message);
+      const classResult = await classifierChat.sendMessage({ message });
       const cleanJson = classResult.text.replace(/```json\n?|```/g, '').trim();
       classification = JSON.parse(cleanJson);
       console.log("Classification:", classification);
@@ -162,7 +214,7 @@ app.post("/api/chat", async (req, res) => {
       msgContent = `<user_attachment>\n${attachment}\n</user_attachment>\n` + msgContent;
     }
 
-    const result = await chat.sendMessage(msgContent);
+    const result = await chat.sendMessage({ message: msgContent });
     const response = result.text;
 
     res.json({ response });
